@@ -1,6 +1,7 @@
 package com.jovani.recipes.domain;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -12,7 +13,7 @@ public class Category {
     private String description;
 
     @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
-    private List<Recipe> recipes;
+    private List<Recipe> recipes = new ArrayList<>();
 
     public Long getId() {
         return id;

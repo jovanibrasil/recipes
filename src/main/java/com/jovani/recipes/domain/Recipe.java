@@ -1,6 +1,7 @@
 package com.jovani.recipes.domain;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,19 +15,20 @@ public class Recipe {
     private Integer cookTime;
     private Integer servings;
     private String source;
+    @Lob
     private String directions;
     @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
     @Lob
     private Byte[] image;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Notes notes;
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
-    private List<Ingredient> ingredients;
+    private List<Ingredient> ingredients = new ArrayList<>();
     @ManyToMany
     @JoinTable(name = "recipe_category", joinColumns = @JoinColumn(name = "recipe_id"),
         inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private List<Category> categories;
+    private List<Category> categories = new ArrayList<>();
 
     public Long getId() {
         return id;
