@@ -4,15 +4,18 @@ import com.jovani.recipes.domain.*;
 import com.jovani.recipes.repositories.CategoryRepository;
 import com.jovani.recipes.repositories.RecipeRepository;
 import com.jovani.recipes.repositories.UnitOfMeasureRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Component
 public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -179,8 +182,10 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     }
 
+    @Transactional //  Create a transaction around this method to avoid exceptions
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
+        log.debug("Loading bootstrap data");
         this.recipeRepository.saveAll(getRecipes());
     }
 }
