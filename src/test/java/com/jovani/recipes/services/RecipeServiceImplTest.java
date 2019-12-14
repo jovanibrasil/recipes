@@ -5,18 +5,18 @@ import com.jovani.recipes.repositories.RecipeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class RecipeServiceImplTest {
 
-    private RecipeServiceImpl recipeServiceImpl;
+    private RecipeServiceImpl recipeService;
 
     @Mock
     private RecipeRepository recipeRepository;
@@ -24,16 +24,32 @@ class RecipeServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        recipeServiceImpl = new RecipeServiceImpl(recipeRepository);
+        recipeService = new RecipeServiceImpl(recipeRepository);
     }
 
     @Test
     void getRecipes() {
         Recipe recipe = new Recipe();
         when(recipeRepository.findAll()).thenReturn(Arrays.asList(recipe));
-        List<Recipe> recipes = recipeServiceImpl.getRecipes();
+        List<Recipe> recipes = recipeService.getRecipes();
         assertEquals(1, recipes.size());
         // verify if a method is called a determined number of times
         verify(recipeRepository, times(1)).findAll();
     }
+
+    @Test
+    void getRecipeById(){
+        Recipe recipe = new Recipe();
+        recipe.setId(1L);
+        Optional<Recipe> optRecipe = Optional.of(recipe);
+
+        when(this.recipeRepository.findById(1L)).thenReturn(optRecipe);
+
+        Recipe recipeReturned = this.recipeService.findById(1L);
+        assertNotNull(recipeReturned); // test if not null
+        verify(recipeRepository).findById(anyLong()); // execution count must be 1
+        verify(recipeRepository, never()).findAll(); // findAll method must not be executed
+
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.jovani.recipes.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
