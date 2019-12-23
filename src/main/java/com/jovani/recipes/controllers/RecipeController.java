@@ -17,14 +17,21 @@ public class RecipeController {
         this.recipeService = recipeService;
     }
 
-    @RequestMapping("/recipe/{id}")
-    public String getRecipeById(@PathVariable String id, Model model){
+    @GetMapping("/recipe/{id}")
+    public String showRecipeById(@PathVariable String id, Model model){
         log.debug("Getting show recipe page");
         model.addAttribute("recipe", this.recipeService.findById(Long.valueOf(id)));
         return "recipe/show";
     }
 
-    @GetMapping("/recipe")
+    @GetMapping("/recipe/{id}/update")
+    public String editRecipeById(@PathVariable String id, Model model){
+        RecipeCommand recipeCommand = this.recipeService.findRecipeCommand(Long.valueOf(id));
+        model.addAttribute("recipe", recipeCommand);
+        return "recipe/recipeform";
+    }
+
+    @RequestMapping("/recipe/new")
     public String createRecipe(Model model){
         model.addAttribute("recipe", new RecipeCommand());
         return "recipe/recipeform";
