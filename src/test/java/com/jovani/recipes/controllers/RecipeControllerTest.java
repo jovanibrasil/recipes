@@ -41,7 +41,7 @@ class RecipeControllerTest {
 
         when(this.recipeService.findById(1L)).thenReturn(recipe);
 
-        this.mockMvc.perform(get("/recipe/1/show"))
+        this.mockMvc.perform(get("/recipe/1"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/show"))
                 .andExpect(model().attributeExists("recipe"));
@@ -67,7 +67,7 @@ class RecipeControllerTest {
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .param("id", "").param("description", "some description"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/recipe/2/show"));
+                .andExpect(view().name("redirect:/recipe/2"));
     }
 
     @Test
