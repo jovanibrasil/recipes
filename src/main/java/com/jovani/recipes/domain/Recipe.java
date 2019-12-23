@@ -1,7 +1,6 @@
 package com.jovani.recipes.domain;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -40,8 +39,10 @@ public class Recipe {
     }
 
     public void setNotes(Notes notes) {
-        this.notes = notes;
-        notes.setRecipe(this);
+        if(notes != null){
+            this.notes = notes;
+            notes.setRecipe(this);
+        }
     }
 
 }

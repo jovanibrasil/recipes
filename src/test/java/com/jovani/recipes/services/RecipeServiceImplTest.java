@@ -1,5 +1,7 @@
 package com.jovani.recipes.services;
 
+import com.jovani.recipes.converters.RecipeCommandToRecipe;
+import com.jovani.recipes.converters.RecipeToRecipeCommand;
 import com.jovani.recipes.domain.Recipe;
 import com.jovani.recipes.repositories.RecipeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,10 +23,15 @@ class RecipeServiceImplTest {
     @Mock
     private RecipeRepository recipeRepository;
 
+    @Mock
+    private RecipeToRecipeCommand recipeToRecipeCommand;
+    @Mock
+    private RecipeCommandToRecipe recipeCommandToRecipe;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        recipeService = new RecipeServiceImpl(recipeRepository);
+        recipeService = new RecipeServiceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
     }
 
     @Test
