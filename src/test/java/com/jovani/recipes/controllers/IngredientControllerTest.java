@@ -4,6 +4,7 @@ import com.jovani.recipes.commands.IngredientCommand;
 import com.jovani.recipes.commands.RecipeCommand;
 import com.jovani.recipes.services.IngredientService;
 import com.jovani.recipes.services.RecipeService;
+import com.jovani.recipes.services.UnitOfMeasureService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -23,13 +24,16 @@ class IngredientControllerTest {
     private RecipeService recipeService;
     @Mock
     private IngredientService ingredientService;
+    @Mock
+    private UnitOfMeasureService unitOfMeasureService;
     private IngredientController ingredientController;
     private MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        this.ingredientController = new IngredientController(this.recipeService, ingredientService);
+        this.ingredientController = new IngredientController(this.recipeService,
+                ingredientService, unitOfMeasureService);
         this.mockMvc = MockMvcBuilders.standaloneSetup(this.ingredientController).build();
     }
 
@@ -51,14 +55,14 @@ class IngredientControllerTest {
     public void testViewIngredient() throws Exception {
 
         IngredientCommand ingredientCommand = new IngredientCommand();
-        when(ingredientService.findByRecipeIdAndIngredientID(anyLong(), anyLong())).thenReturn(ingredientCommand);
+        when(ingredientService.findById(anyLong())).thenReturn(ingredientCommand);
 
         mockMvc.perform(get("/recipe/1/ingredient/1"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/ingredients/viewingredient"))
                 .andExpect(model().attributeExists("ingredient"));
 
-        verify(ingredientService).findByRecipeIdAndIngredientID(anyLong(), anyLong());
+        verify(ingredientService).findById(anyLong());
     }
 
 }
