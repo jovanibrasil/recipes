@@ -25,33 +25,34 @@ public class RecipeToRecipeCommand implements Converter<Recipe, RecipeCommand> {
     @Synchronized
     @Nullable
     @Override
-    public RecipeCommand convert(Recipe source) {
-        if(source == null) return null;
+    public RecipeCommand convert(Recipe recipe) {
+        if(recipe == null) return null;
 
-        final RecipeCommand recipe = new RecipeCommand();
+        final RecipeCommand recipeCommand = new RecipeCommand();
 
-        recipe.setId(source.getId());
-        recipe.setCookTime(source.getCookTime());
-        recipe.setServings(source.getServings());
-        recipe.setSource(source.getSource());
-        recipe.setDescription(source.getDescription());
-        recipe.setDirections(source.getDirections());
-        recipe.setPrepTime(source.getPrepTime());
-        recipe.setDifficulty(source.getDifficulty());
-        recipe.setNotes(notesConverter.convert(source.getNotes()));
+        recipeCommand.setId(recipe.getId());
+        recipeCommand.setCookTime(recipe.getCookTime());
+        recipeCommand.setServings(recipe.getServings());
+        recipeCommand.setSource(recipe.getSource());
+        recipeCommand.setDescription(recipe.getDescription());
+        recipeCommand.setDirections(recipe.getDirections());
+        recipeCommand.setPrepTime(recipe.getPrepTime());
+        recipeCommand.setDifficulty(recipe.getDifficulty());
+        recipeCommand.setImage(recipe.getImage());
+        recipeCommand.setNotes(notesConverter.convert(recipe.getNotes()));
 
-        if(source.getCategories() != null && source.getCategories().size() > 0){
-            source.getCategories().forEach(category -> {
-                recipe.getCategories().add(categoryConverter.convert(category));
+        if(recipe.getCategories() != null && recipe.getCategories().size() > 0){
+            recipe.getCategories().forEach(category -> {
+                recipeCommand.getCategories().add(categoryConverter.convert(category));
             });
         }
 
-        if(source.getIngredients() != null && source.getIngredients().size() > 0){
-            source.getIngredients().forEach(ingredient -> {
-                recipe.getIngredients().add(ingredientConverter.convert(ingredient));
+        if(recipe.getIngredients() != null && recipe.getIngredients().size() > 0){
+            recipe.getIngredients().forEach(ingredient -> {
+                recipeCommand.getIngredients().add(ingredientConverter.convert(ingredient));
             });
         }
 
-        return recipe;
+        return recipeCommand;
     }
 }
