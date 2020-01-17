@@ -21,37 +21,15 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <div class="panel panel-primary">
-<<<<<<< HEAD
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-md-11 ">
-                            <h1 class="panel-title">Ingredients</h1>
-                        </div>
-                        <div class="col-md-1">
-                            <a class="btn btn-default pull-right" href="#"
-                               th:href="@{'/recipe/' + ${recipe.id} + '/ingredient/new'}" role="button">Create</a>
-                        </div>
-                    </div>
-=======
 
                 <div class="panel-heading">
                     <h1 class="panel-title">Ingredients</h1>
->>>>>>> 9a39cf24b3c11d72731b9228fff2dc78b037ef02
                 </div>
                 <div class="panel-body">
 
                     <div class="table-responsive" th:if="${not #lists.isEmpty(recipe.ingredients)}">
                         <table class="table table-hover ">
                             <thead class="thead-inverse">
-<<<<<<< HEAD
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Description</th>
-                                    <th>View</th>
-                                    <th>Update</th>
-                                    <th>Delete</th>
-                                </tr>
-=======
                             <tr>
                                 <th>ID</th>
                                 <th>Description</th>
@@ -59,7 +37,6 @@
                                 <th>Update</th>
                                 <th>Delete</th>
                             </tr>
->>>>>>> 9a39cf24b3c11d72731b9228fff2dc78b037ef02
                             </thead>
                             <tr th:remove="all">
                                 <td>123</td>
@@ -77,13 +54,8 @@
                             </tr>
                             <tr th:each="ingredient : ${recipe.ingredients}">
                                 <td th:text="${ingredient.id}">334</td>
-<<<<<<< HEAD
-                                <td th:text="${ingredient.amount} + ' ' + ${ingredient.uom.getDescription()} + ' ' + ${ingredient.description}">Tasty Goodnees 3</td>
-                                <td><a href="#" th:href="@{'/recipe/' + ${recipe.id} + '/ingredient/' + ${ingredient.id}}">View</a></td>
-=======
                                 <td th:text="${ingredient.amount} + ' ' + ${ingredient.uom.getDescription()} + ' ' + ${ingredient.description} + '/show'">Tasty Goodnees 3</td>
                                 <td><a href="#" th:href="@{'/recipe/' + ${recipe.id} + '/ingredient/' + ${ingredient.id} + '/show'}">View</a></td>
->>>>>>> 9a39cf24b3c11d72731b9228fff2dc78b037ef02
                                 <td><a href="#" th:href="@{'/recipe/' + ${recipe.id} + '/ingredient/' + ${ingredient.id} + '/update'}">Update</a></td>
                                 <td><a href="#" th:href="@{'/recipe/' + ${recipe.id} + '/ingredient/' + ${ingredient.id} + '/delete'}">Delete</a></td>
                             </tr>

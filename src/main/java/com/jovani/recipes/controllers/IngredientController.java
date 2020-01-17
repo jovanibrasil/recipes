@@ -36,7 +36,7 @@ public class IngredientController {
         return "recipe/ingredients/list";
     }
 
-    @GetMapping("/recipe/{recipeId}/ingredient/{ingredientId}")
+    @GetMapping("/recipe/{recipeId}/ingredient/{ingredientId}/show")
     public String viewIngredient(@PathVariable Long recipeId,
                                  @PathVariable Long ingredientId, Model model){
         log.debug("Getting ingredient {}", ingredientId);
@@ -91,7 +91,7 @@ public class IngredientController {
         log.debug("saved ingredient id:" + savedIngredientCommand.getId());
 
         return "redirect:/recipe/" + savedIngredientCommand.getRecipeId() +
-                "/ingredient/" + savedIngredientCommand.getId();
+                "/ingredient/" + savedIngredientCommand.getId() + "/show";
     }
 
 }

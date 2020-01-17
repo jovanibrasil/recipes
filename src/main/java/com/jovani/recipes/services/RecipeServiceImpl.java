@@ -4,6 +4,7 @@ import com.jovani.recipes.commands.RecipeCommand;
 import com.jovani.recipes.converters.RecipeCommandToRecipe;
 import com.jovani.recipes.converters.RecipeToRecipeCommand;
 import com.jovani.recipes.domain.Recipe;
+import com.jovani.recipes.exceptions.NotFoundException;
 import com.jovani.recipes.repositories.RecipeRepository;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ public class RecipeServiceImpl implements RecipeService {
         Optional<Recipe> recipeOptional = this.recipeRepository.findById(id);
 
         if(!recipeOptional.isPresent()){
-            throw new RuntimeException("Recipe not found");
+            throw new NotFoundException("Recipe not found for id: " + id);
         }
         return recipeOptional.get();
     }

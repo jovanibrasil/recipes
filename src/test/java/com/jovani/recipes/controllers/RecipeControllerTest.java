@@ -2,6 +2,7 @@ package com.jovani.recipes.controllers;
 
 import com.jovani.recipes.commands.RecipeCommand;
 import com.jovani.recipes.domain.Recipe;
+import com.jovani.recipes.exceptions.NotFoundException;
 import com.jovani.recipes.services.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
@@ -30,7 +32,10 @@ class RecipeControllerTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
         recipeController = new RecipeController(recipeService);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(this.recipeController).build();
+        this.mockMvc = MockMvcBuilders
+                        .standaloneSetup(this.recipeController)
+                        .setControllerAdvice(new ControllerExceptionHandler())
+                        .build();
     }
 
     @Test
@@ -45,6 +50,14 @@ class RecipeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/show"))
                 .andExpect(model().attributeExists("recipe"));
+    }
+
+    @Test
+    public void testGetRecipeNotFound() throws Exception {
+        when(this.recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+        this.mockMvc.perform(get("/recipe/500"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("404error"));
     }
 
     @Test

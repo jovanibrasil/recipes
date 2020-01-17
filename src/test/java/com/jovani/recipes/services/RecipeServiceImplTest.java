@@ -3,7 +3,9 @@ package com.jovani.recipes.services;
 import com.jovani.recipes.converters.RecipeCommandToRecipe;
 import com.jovani.recipes.converters.RecipeToRecipeCommand;
 import com.jovani.recipes.domain.Recipe;
+import com.jovani.recipes.exceptions.NotFoundException;
 import com.jovani.recipes.repositories.RecipeRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -35,7 +37,7 @@ class RecipeServiceImplTest {
     }
 
     @Test
-    void getRecipes() {
+    void getRecipesTest() {
         Recipe recipe = new Recipe();
         when(recipeRepository.findAll()).thenReturn(Arrays.asList(recipe));
         List<Recipe> recipes = recipeService.getRecipes();
@@ -45,7 +47,7 @@ class RecipeServiceImplTest {
     }
 
     @Test
-    void getRecipeById(){
+    void getRecipeByIdTest(){
         Recipe recipe = new Recipe();
         recipe.setId(1L);
         Optional<Recipe> optRecipe = Optional.of(recipe);
@@ -57,6 +59,15 @@ class RecipeServiceImplTest {
         verify(recipeRepository).findById(anyLong()); // execution count must be 1
         verify(recipeRepository, never()).findAll(); // findAll method must not be executed
 
+    }
+
+    @Test
+    void getRecipeByIdTestNotFound(){
+        Assertions.assertThrows(NotFoundException.class, () -> {
+            Optional<Recipe> optionalRecipe = Optional.empty();
+            when(recipeRepository.findById(any())).thenReturn(optionalRecipe);
+            Recipe recipe = recipeService.findById(1L);
+        });
     }
 
 }
