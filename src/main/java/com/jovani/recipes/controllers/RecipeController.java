@@ -5,7 +5,10 @@ import com.jovani.recipes.services.RecipeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Slf4j
 @Controller
@@ -45,7 +48,10 @@ public class RecipeController {
     }
 
     @PostMapping("/recipe")
-    public String updateRecipe(@ModelAttribute RecipeCommand recipeCommand){
+    public String updateRecipe(@Valid @ModelAttribute("recipe") RecipeCommand recipeCommand, BindingResult bindingResult){
+
+        if(bindingResult.hasErrors()) return "recipe/recipeform";
+
         RecipeCommand savedRecipeCommand = this.recipeService
                 .saveRecipeCommand(recipeCommand);
         return "redirect:/recipe/" + savedRecipeCommand.getId();

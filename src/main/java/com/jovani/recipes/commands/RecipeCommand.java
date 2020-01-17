@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,11 +14,17 @@ import java.util.List;
 public class RecipeCommand {
 
     private Long id;
+    @NotBlank
+    @Size(min = 3, max = 255)
     private String description;
+    @Min(1) @Max(999) @NotNull
     private Integer prepTime;
+    @Min(1) @Max(999) @NotNull
     private Integer cookTime;
+    @Min(1) @Max(100) @NotNull
     private Integer servings;
     private String source;
+    @NotBlank
     private String directions;
     private Difficulty difficulty;
     private Byte[] image;
