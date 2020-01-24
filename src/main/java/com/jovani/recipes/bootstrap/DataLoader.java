@@ -2,36 +2,87 @@ package com.jovani.recipes.bootstrap;
 
 import com.jovani.recipes.domain.*;
 import com.jovani.recipes.repositories.CategoryRepository;
+import com.jovani.recipes.repositories.IngredientRepository;
 import com.jovani.recipes.repositories.RecipeRepository;
 import com.jovani.recipes.repositories.UnitOfMeasureRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import javax.transaction.Transactional;
+import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
+@RequiredArgsConstructor
 @Component
 public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     private final CategoryRepository categoryRepository;
     private final RecipeRepository recipeRepository;
     private final UnitOfMeasureRepository unitOfMeasureRepository;
+    private final IngredientRepository ingredientRepository;
 
-    public DataLoader(CategoryRepository categoryRepository, RecipeRepository recipeRepository, UnitOfMeasureRepository unitOfMeasureRepository) {
-        this.categoryRepository = categoryRepository;
-        this.recipeRepository = recipeRepository;
-        this.unitOfMeasureRepository = unitOfMeasureRepository;
+    private void loadCategories(){
+        Category cat1 = new Category();
+        cat1.setDescription("American");
+        categoryRepository.save(cat1);
+
+        Category cat2 = new Category();
+        cat2.setDescription("Italian");
+        categoryRepository.save(cat2);
+
+        Category cat3 = new Category();
+        cat3.setDescription("Mexican");
+        categoryRepository.save(cat3);
+
+        Category cat4 = new Category();
+        cat4.setDescription("Fast Food");
+        categoryRepository.save(cat4);
     }
 
-    private List<Recipe> getRecipes(){
+    private void loadUom(){
+        UnitOfMeasure uom1 = new UnitOfMeasure();
+        uom1.setDescription("Teaspoon");
+        unitOfMeasureRepository.save(uom1);
 
-        List<Recipe> recipes = new ArrayList<>(2);
+        UnitOfMeasure uom2 = new UnitOfMeasure();
+        uom2.setDescription("Tablespoon");
+        unitOfMeasureRepository.save(uom2);
+
+        UnitOfMeasure uom3 = new UnitOfMeasure();
+        uom3.setDescription("Cup");
+        unitOfMeasureRepository.save(uom3);
+
+        UnitOfMeasure uom4 = new UnitOfMeasure();
+        uom4.setDescription("Pinch");
+        unitOfMeasureRepository.save(uom4);
+
+        UnitOfMeasure uom5 = new UnitOfMeasure();
+        uom5.setDescription("Ounce");
+        unitOfMeasureRepository.save(uom5);
+
+        UnitOfMeasure uom6 = new UnitOfMeasure();
+        uom6.setDescription("Each");
+        unitOfMeasureRepository.save(uom6);
+
+        UnitOfMeasure uom7 = new UnitOfMeasure();
+        uom7.setDescription("Pint");
+        unitOfMeasureRepository.save(uom7);
+
+        UnitOfMeasure uom8 = new UnitOfMeasure();
+        uom8.setDescription("Dash");
+        unitOfMeasureRepository.save(uom8);
+    }
+
+    private void loadRecipes() throws IOException {
 
         //get UOMs
         Optional<UnitOfMeasure> eachUomOptional = unitOfMeasureRepository.findByDescription("Each");
@@ -80,6 +131,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
         //Yummy Guac
         Recipe guacRecipe = new Recipe();
+        this.recipeRepository.save(guacRecipe);
         guacRecipe.setDescription("Perfect Guacamole");
         guacRecipe.setPrepTime(10);
         guacRecipe.setCookTime(0);
@@ -107,26 +159,38 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
                 "Read more: http://www.simplyrecipes.com/recipes/perfect_guacamole/#ixzz4jvoun5ws");
         guacRecipe.setNotes(guacNotes);
 
-        guacRecipe.addIngredient(new Ingredient("ripe avocados", new BigDecimal(2), eachUom));
-        guacRecipe.addIngredient(new Ingredient("Kosher salt", new BigDecimal(".5"), teapoonUom));
-        guacRecipe.addIngredient(new Ingredient("fresh lime juice or lemon juice", new BigDecimal(2), tableSpoonUom));
-        guacRecipe.addIngredient(new Ingredient("minced red onion or thinly sliced green onion", new BigDecimal(2), tableSpoonUom));
-        guacRecipe.addIngredient(new Ingredient("serrano chiles, stems and seeds removed, minced", new BigDecimal(2), eachUom));
-        guacRecipe.addIngredient(new Ingredient("Cilantro", new BigDecimal(2), tableSpoonUom));
-        guacRecipe.addIngredient(new Ingredient("freshly grated black pepper", new BigDecimal(2), dashUom));
-        guacRecipe.addIngredient(new Ingredient("ripe tomato, seeds and pulp removed, chopped", new BigDecimal(".5"), eachUom));
+        Ingredient ripeAvocados = new Ingredient("ripe avocados", new BigDecimal(2), eachUom, guacRecipe.getId());
+        Ingredient kosherSalt = new Ingredient("Kosher salt", new BigDecimal(".5"), teapoonUom, guacRecipe.getId());
+        Ingredient limeLemonJuice = new Ingredient("fresh lime juice or lemon juice", new BigDecimal(2), tableSpoonUom, guacRecipe.getId());
+        Ingredient redOnion = new Ingredient("minced red onion or thinly sliced green onion", new BigDecimal(2), tableSpoonUom, guacRecipe.getId());
+        Ingredient serranoChiles = new Ingredient("serrano chiles, stems and seeds removed, minced", new BigDecimal(2), eachUom, guacRecipe.getId());
+        Ingredient cilantro = new Ingredient("Cilantro", new BigDecimal(2), tableSpoonUom, guacRecipe.getId());
+        Ingredient pepper = new Ingredient("freshly grated black pepper", new BigDecimal(2), dashUom, guacRecipe.getId());
+        Ingredient tomato = new Ingredient("ripe tomato, seeds and pulp removed, chopped", new BigDecimal(".5"), eachUom, guacRecipe.getId());
+
+        List<Ingredient> guacIngredients = Arrays.asList(
+            ingredientRepository.save(ripeAvocados),
+            ingredientRepository.save(kosherSalt),
+            ingredientRepository.save(limeLemonJuice),
+            ingredientRepository.save(redOnion),
+            ingredientRepository.save(serranoChiles),
+            ingredientRepository.save(cilantro),
+            ingredientRepository.save(pepper),
+            ingredientRepository.save(tomato)
+        );
+        guacRecipe.setIngredients(guacIngredients);
 
         guacRecipe.getCategories().add(americanCategory);
         guacRecipe.getCategories().add(mexicanCategory);
-
+        guacRecipe.setImage(loadImage("./static/images/guacamole.jpg"));
         guacRecipe.setSource("Simply Recipes");
         guacRecipe.setServings(4);
 
-        //add to return list
-        recipes.add(guacRecipe);
+        this.recipeRepository.save(guacRecipe);
 
         //Yummy Tacos
         Recipe tacosRecipe = new Recipe();
+        this.recipeRepository.save(tacosRecipe);
         tacosRecipe.setDescription("Spicy Grilled Chicken Taco");
         tacosRecipe.setCookTime(9);
         tacosRecipe.setPrepTime(20);
@@ -157,39 +221,76 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         tacosRecipe.setNotes(tacoNotes);
 
 
-        tacosRecipe.addIngredient(new Ingredient("Ancho Chili Powder", new BigDecimal(2), tableSpoonUom));
-        tacosRecipe.addIngredient(new Ingredient("Dried Oregano", new BigDecimal(1), teapoonUom));
-        tacosRecipe.addIngredient(new Ingredient("Dried Cumin", new BigDecimal(1), teapoonUom));
-        tacosRecipe.addIngredient(new Ingredient("Sugar", new BigDecimal(1), teapoonUom));
-        tacosRecipe.addIngredient(new Ingredient("Salt", new BigDecimal(".5"), teapoonUom));
-        tacosRecipe.addIngredient(new Ingredient("Clove of Garlic, Choppedr", new BigDecimal(1), eachUom));
-        tacosRecipe.addIngredient(new Ingredient("finely grated orange zestr", new BigDecimal(1), tableSpoonUom));
-        tacosRecipe.addIngredient(new Ingredient("fresh-squeezed orange juice", new BigDecimal(3), tableSpoonUom));
-        tacosRecipe.addIngredient(new Ingredient("Olive Oil", new BigDecimal(2), tableSpoonUom));
-        tacosRecipe.addIngredient(new Ingredient("boneless chicken thighs", new BigDecimal(4), tableSpoonUom));
-        tacosRecipe.addIngredient(new Ingredient("small corn tortillasr", new BigDecimal(8), eachUom));
-        tacosRecipe.addIngredient(new Ingredient("packed baby arugula", new BigDecimal(3), cupsUom));
-        tacosRecipe.addIngredient(new Ingredient("medium ripe avocados, slic", new BigDecimal(2), eachUom));
-        tacosRecipe.addIngredient(new Ingredient("radishes, thinly sliced", new BigDecimal(4), eachUom));
-        tacosRecipe.addIngredient(new Ingredient("cherry tomatoes, halved", new BigDecimal(".5"), pintUom));
-        tacosRecipe.addIngredient(new Ingredient("red onion, thinly sliced", new BigDecimal(".25"), eachUom));
-        tacosRecipe.addIngredient(new Ingredient("Roughly chopped cilantro", new BigDecimal(4), eachUom));
-        tacosRecipe.addIngredient(new Ingredient("cup sour cream thinned with 1/4 cup milk", new BigDecimal(4), cupsUom));
-        tacosRecipe.addIngredient(new Ingredient("lime, cut into wedges", new BigDecimal(4), eachUom));
+        Ingredient anchoChili = new Ingredient("Ancho Chili Powder", new BigDecimal(2), tableSpoonUom, tacosRecipe.getId());
+        Ingredient oregano = new Ingredient("Dried Oregano", new BigDecimal(1), teapoonUom, tacosRecipe.getId());
+        Ingredient cumin = new Ingredient("Dried Cumin", new BigDecimal(1), teapoonUom, tacosRecipe.getId());
+        Ingredient sugar = new Ingredient("Sugar", new BigDecimal(1), teapoonUom, tacosRecipe.getId());
+        Ingredient salt = new Ingredient("Salt", new BigDecimal(".5"), teapoonUom, tacosRecipe.getId());
+        Ingredient garlic = new Ingredient("Clove of Garlic, Choppedr", new BigDecimal(1), eachUom, tacosRecipe.getId());
+        Ingredient orange = new Ingredient("finely grated orange zestr", new BigDecimal(1), tableSpoonUom, tacosRecipe.getId());
+        Ingredient juice = new Ingredient("fresh-squeezed orange juice", new BigDecimal(3), tableSpoonUom, tacosRecipe.getId());
+        Ingredient oil = new Ingredient("Olive Oil", new BigDecimal(2), tableSpoonUom, tacosRecipe.getId());
+        Ingredient chicken = new Ingredient("boneless chicken thighs", new BigDecimal(4), tableSpoonUom, tacosRecipe.getId());
+        Ingredient corn = new Ingredient("small corn tortillasr", new BigDecimal(8), eachUom, tacosRecipe.getId());
+        Ingredient arugula = new Ingredient("packed baby arugula", new BigDecimal(3), cupsUom, tacosRecipe.getId());
+        Ingredient avocados = new Ingredient("medium ripe avocados, slic", new BigDecimal(2), eachUom, tacosRecipe.getId());
+        Ingredient radishes = new Ingredient("radishes, thinly sliced", new BigDecimal(4), eachUom, tacosRecipe.getId());
+        Ingredient tomatos = new Ingredient("cherry tomatoes, halved", new BigDecimal(".5"), pintUom, tacosRecipe.getId());
+        Ingredient onion = new Ingredient("red onion, thinly sliced", new BigDecimal(".25"), eachUom, tacosRecipe.getId());
+        Ingredient choppedCilantro = new Ingredient("Roughly chopped cilantro", new BigDecimal(4), eachUom, tacosRecipe.getId());
+        Ingredient milk = new Ingredient("cup sour cream thinned with 1/4 cup milk", new BigDecimal(4), cupsUom, tacosRecipe.getId());
+        Ingredient lime = new Ingredient("lime, cut into wedges", new BigDecimal(4), eachUom, tacosRecipe.getId());
 
+        List<Ingredient> tacoIngredients = Arrays.asList(
+            ingredientRepository.save(anchoChili),
+            ingredientRepository.save(oregano),
+            ingredientRepository.save(cumin),
+            ingredientRepository.save(sugar),
+            ingredientRepository.save(salt),
+            ingredientRepository.save(garlic),
+            ingredientRepository.save(orange),
+            ingredientRepository.save(juice),
+            ingredientRepository.save(oil),
+            ingredientRepository.save(chicken),
+            ingredientRepository.save(corn),
+            ingredientRepository.save(arugula),
+            ingredientRepository.save(avocados),
+            ingredientRepository.save(radishes),
+            ingredientRepository.save(tomatos),
+            ingredientRepository.save(onion),
+            ingredientRepository.save(choppedCilantro),
+            ingredientRepository.save(milk),
+            ingredientRepository.save(lime)
+        );
+
+        tacosRecipe.setIngredients(tacoIngredients);
+        tacosRecipe.setImage(loadImage("./static/images/tacos.jpg")); // Byte[]
         tacosRecipe.getCategories().add(americanCategory);
         tacosRecipe.getCategories().add(mexicanCategory);
         tacosRecipe.setServings(5);
         tacosRecipe.setSource("Simply Recipes");
-        recipes.add(tacosRecipe);
-        return recipes;
+        this.recipeRepository.save(tacosRecipe);
 
     }
 
-    @Transactional //  Create a transaction around this method to avoid exceptions
+    public Byte[] loadImage(String path){
+        try {
+            byte[] image = Files.readAllBytes(Paths.get(this.getClass()
+                    .getClassLoader().getResource(path).toURI()));
+            Byte[] byteImage = new Byte[image.length];
+            for (int i=0; i < image.length; i++) byteImage[i] = Byte.valueOf(image[i]);
+            return byteImage;
+        }catch (Exception e){
+            return null;
+        }
+    }
+
+    @SneakyThrows
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         log.debug("Loading bootstrap data");
-        this.recipeRepository.saveAll(getRecipes());
+        loadCategories();
+        loadUom();
+        loadRecipes();
     }
 }

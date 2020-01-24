@@ -28,11 +28,11 @@ public class IngredientCommandToIngredient implements Converter<IngredientComman
         ingredient.setDescription(source.getDescription());
         ingredient.setAmount(source.getAmount());
         ingredient.setUom(this.unitOfMeasureCommandToUnitOfMeasure.convert(source.getUom()));
+        ingredient.setRecipeId(source.getRecipeId());
 
         if(source.getRecipeId() != null){
             Recipe recipe = new Recipe();
             recipe.setId(source.getRecipeId());
-            ingredient.setRecipe(recipe);
             recipe.addIngredient(ingredient);
         }
         return ingredient;

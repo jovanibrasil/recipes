@@ -1,37 +1,31 @@
 package com.jovani.recipes.domain;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.UUID;
 
-@Data
-@Entity
+@Getter @Setter
+@Document
 public class Ingredient {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id = UUID.randomUUID().toString();
     private String description;
     private BigDecimal amount;
-    @OneToOne
+    @DBRef
     private UnitOfMeasure uom;
-    @ManyToOne
-    private Recipe recipe;
+    private String recipeId;
 
     public Ingredient() {}
 
-    public Ingredient(String description, BigDecimal amount, UnitOfMeasure uom, Recipe recipe) {
+    public Ingredient(String description, BigDecimal amount, UnitOfMeasure uom, String recipeId) {
         this.description = description;
         this.amount = amount;
         this.uom = uom;
-        this.recipe = recipe;
-    }
-
-    public Ingredient(String description, BigDecimal amount, UnitOfMeasure uom) {
-        this.description = description;
-        this.amount = amount;
-        this.uom = uom;
+        this.recipeId = recipeId;
     }
 
 }

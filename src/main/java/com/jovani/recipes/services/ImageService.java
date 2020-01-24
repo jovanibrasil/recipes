@@ -3,5 +3,5 @@ package com.jovani.recipes.services;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ImageService {
-    void saveImageFile(Long id, MultipartFile image);
+    void saveImageFile(String id, MultipartFile image);
 }

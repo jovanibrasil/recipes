@@ -5,11 +5,11 @@ import com.jovani.recipes.domain.Notes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class NotesCommandToNotesTest {
 
-    public static final Long NOTE_ID = 1L;
+    public static final String NOTE_ID = "1L";
     public static final String NOTES = "My notes";
 
     private NotesCommandToNotes notesCommandToNotes;

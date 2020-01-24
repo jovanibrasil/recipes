@@ -34,9 +34,9 @@ class UnitOfMeasureServiceImplTest {
     @Test
     public void listAllUoms(){
         UnitOfMeasure unitOfMeasure1 = new UnitOfMeasure();
-        unitOfMeasure1.setId(1L);
+        unitOfMeasure1.setId("1L");
         UnitOfMeasure unitOfMeasure2 = new UnitOfMeasure();
-        unitOfMeasure1.setId(2L);
+        unitOfMeasure1.setId("2L");
 
         List<UnitOfMeasure> unitOfMeasureList = Arrays.asList(unitOfMeasure1, unitOfMeasure2);
 

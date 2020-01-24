@@ -9,14 +9,14 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class IngredientToIngredientCommandTest {
 
-    public static final Long ID = 1L;
+    public static final String ID = "1L";
     public static final String DESCRIPTION = "My notes";
     public static final BigDecimal AMOUNT = new BigDecimal("2");
-    public static final Long UOM_ID = new Long(2L);
+    public static final String UOM_ID = "2L";
     public static final Recipe RECIPE = new Recipe();
 
     private IngredientToIngredientCommand ingredientToIngredientCommand;

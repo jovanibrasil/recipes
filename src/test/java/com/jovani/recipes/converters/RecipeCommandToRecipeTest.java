@@ -5,7 +5,6 @@ import com.jovani.recipes.commands.IngredientCommand;
 import com.jovani.recipes.commands.NotesCommand;
 import com.jovani.recipes.commands.RecipeCommand;
 import com.jovani.recipes.domain.Difficulty;
-import com.jovani.recipes.domain.Notes;
 import com.jovani.recipes.domain.Recipe;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RecipeCommandToRecipeTest {
 
-    public static final Long RECIPE_ID = 1L;
+    public static final String RECIPE_ID = "1L";
     public static final Integer COOK_TIME = Integer.valueOf("5");
     public static final Integer PREP_TIME = Integer.valueOf("7");
     public static final String DESCRIPTION = "My recipe";
@@ -25,11 +24,11 @@ class RecipeCommandToRecipeTest {
     public static final Integer SERVINGS = Integer.valueOf("3");
     public static final String SOURCE = "Source";
     public static final String URL = "Some url";
-    public static final Long CAT_ID1 = 1L;
-    public static final Long CAT_ID2 = 2L;
-    public static final Long INGRED_ID1 = 1L;
-    public static final Long INGRED_ID2 = 2L;
-    public static final Long NOTES_ID = 9L;
+    public static final String CAT_ID1 = "1L";
+    public static final String CAT_ID2 = "2L";
+    public static final String INGRED_ID1 = "1L";
+    public static final String INGRED_ID2 = "2L";
+    public static final String NOTES_ID = "9L";
     public RecipeCommandToRecipe converter;
 
     @BeforeEach

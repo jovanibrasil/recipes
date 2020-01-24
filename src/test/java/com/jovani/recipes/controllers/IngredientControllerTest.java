@@ -3,7 +3,6 @@ package com.jovani.recipes.controllers;
 import com.jovani.recipes.commands.IngredientCommand;
 import com.jovani.recipes.commands.RecipeCommand;
 import com.jovani.recipes.services.IngredientService;
-
 import com.jovani.recipes.services.RecipeService;
 import com.jovani.recipes.services.UnitOfMeasureService;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +12,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -42,28 +41,28 @@ class IngredientControllerTest {
     public void testListIngredients() throws Exception {
 
         RecipeCommand recipeCommand = new RecipeCommand();
-        when(recipeService.findIngredientCommandById(anyLong())).thenReturn(recipeCommand);
+        when(recipeService.findIngredientCommandById(anyString())).thenReturn(recipeCommand);
 
         mockMvc.perform(get("/recipe/1/ingredients"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/ingredients/list"))
                 .andExpect(model().attributeExists("recipe"));
 
-        verify(recipeService).findIngredientCommandById(anyLong());
+        verify(recipeService).findIngredientCommandById(anyString());
     }
 
     @Test
     public void testViewIngredient() throws Exception {
 
         IngredientCommand ingredientCommand = new IngredientCommand();
-        when(ingredientService.findById(anyLong())).thenReturn(ingredientCommand);
+        when(ingredientService.findById(anyString())).thenReturn(ingredientCommand);
 
         mockMvc.perform(get("/recipe/1/ingredient/1/show"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/ingredients/viewingredient"))
                 .andExpect(model().attributeExists("ingredient"));
 
-        verify(ingredientService).findById(anyLong());
+        verify(ingredientService).findById(anyString());
     }
 
 }

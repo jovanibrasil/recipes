@@ -14,13 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class ImageServiceTest {
 
@@ -39,14 +35,14 @@ class ImageServiceTest {
     @Test
     void saveImageFile() throws Exception {
 
-        Long id = 1L;
+        String id = "1L";
         MultipartFile mockMultipartFile = new MockMultipartFile("imagefile",
                 "testing.txt", "text/plain", "Spring Framework".getBytes());
 
         Recipe recipe = new Recipe();
         recipe.setId(id);
         Optional<Recipe> optionalRecipe = Optional.of(recipe);
-        when(recipeRepository.findById(anyLong())).thenReturn(optionalRecipe);
+        when(recipeRepository.findById(anyString())).thenReturn(optionalRecipe);
         ArgumentCaptor<Recipe> argumentCaptor = ArgumentCaptor.forClass(Recipe.class);
 
         // when

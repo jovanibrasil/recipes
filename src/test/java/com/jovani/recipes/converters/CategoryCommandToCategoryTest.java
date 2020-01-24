@@ -2,7 +2,6 @@ package com.jovani.recipes.converters;
 
 import com.jovani.recipes.commands.CategoryCommand;
 import com.jovani.recipes.domain.Category;
-import com.jovani.recipes.domain.UnitOfMeasure;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CategoryCommandToCategoryTest {
     private static final String DESCRIPTION = "description";
-    private static final Long ID = 1L;
+    private static final String ID = "1L";
 
     private CategoryCommandToCategory categoryCommandToCategory;
 

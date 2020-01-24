@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Slf4j
@@ -19,9 +18,8 @@ public class ImageServiceImpl implements ImageService {
         this.recipeRepository = recipeRepository;
     }
 
-    @Transactional
     @Override
-    public void saveImageFile(Long id, MultipartFile image) {
+    public void saveImageFile(String id, MultipartFile image) {
 
         try {
             Optional<Recipe> optionalRecipe = this.recipeRepository.findById(id);

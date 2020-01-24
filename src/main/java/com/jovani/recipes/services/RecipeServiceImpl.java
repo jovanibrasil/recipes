@@ -8,7 +8,6 @@ import com.jovani.recipes.exceptions.NotFoundException;
 import com.jovani.recipes.repositories.RecipeRepository;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +34,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Recipe findById(Long id) {
+    public Recipe findById(String id) {
         Optional<Recipe> recipeOptional = this.recipeRepository.findById(id);
 
         if(!recipeOptional.isPresent()){
@@ -44,13 +43,11 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeOptional.get();
     }
 
-    @Transactional
     @Override
-    public RecipeCommand findRecipeCommand(Long id){
+    public RecipeCommand findRecipeCommand(String id){
         return this.recipeToRecipeCommand.convert(this.findById(id));
     }
 
-    @Transactional
     @Override
     public RecipeCommand saveRecipeCommand(RecipeCommand recipeCommand) {
         Recipe detachedRecipe = this.recipeCommandToRecipeConverter.convert(recipeCommand);
@@ -59,12 +56,12 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         this.recipeRepository.deleteById(id);
     }
 
     @Override
-    public RecipeCommand findIngredientCommandById(long id) {
+    public RecipeCommand findIngredientCommandById(String id) {
         Recipe recipe = this.findById(id);
         RecipeCommand recipeCommand = this.recipeToRecipeCommand.convert(recipe);
         return recipeCommand;

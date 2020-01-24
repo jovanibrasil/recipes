@@ -15,7 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 class RecipeServiceImplTest {
@@ -49,14 +50,14 @@ class RecipeServiceImplTest {
     @Test
     void getRecipeByIdTest(){
         Recipe recipe = new Recipe();
-        recipe.setId(1L);
+        recipe.setId("1L");
         Optional<Recipe> optRecipe = Optional.of(recipe);
 
-        when(this.recipeRepository.findById(1L)).thenReturn(optRecipe);
+        when(this.recipeRepository.findById("1L")).thenReturn(optRecipe);
 
-        Recipe recipeReturned = this.recipeService.findById(1L);
+        Recipe recipeReturned = this.recipeService.findById("1L");
         assertNotNull(recipeReturned); // test if not null
-        verify(recipeRepository).findById(anyLong()); // execution count must be 1
+        verify(recipeRepository).findById(anyString()); // execution count must be 1
         verify(recipeRepository, never()).findAll(); // findAll method must not be executed
 
     }
@@ -66,7 +67,7 @@ class RecipeServiceImplTest {
         Assertions.assertThrows(NotFoundException.class, () -> {
             Optional<Recipe> optionalRecipe = Optional.empty();
             when(recipeRepository.findById(any())).thenReturn(optionalRecipe);
-            Recipe recipe = recipeService.findById(1L);
+            Recipe recipe = recipeService.findById("1L");
         });
     }
 

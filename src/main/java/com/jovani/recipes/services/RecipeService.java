@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface RecipeService {
     List<Recipe> getRecipes();
-    Recipe findById(Long id);
-    void deleteById(Long id);
+    Recipe findById(String id);
+    void deleteById(String id);
     RecipeCommand saveRecipeCommand(RecipeCommand recipeCommand);
-    public RecipeCommand findRecipeCommand(Long id);
-    RecipeCommand findIngredientCommandById(long anyLong);
+    public RecipeCommand findRecipeCommand(String id);
+    RecipeCommand findIngredientCommandById(String anyLong);
 }

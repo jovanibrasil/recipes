@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import sun.nio.ch.IOUtil;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
@@ -32,14 +31,14 @@ public class ImageController {
     }
 
     @GetMapping("/recipe/{id}/image")
-    public String showUploadForm(@PathVariable Long id, Model model){
+    public String showUploadForm(@PathVariable String id, Model model){
         log.info("Getting image upload form.");
         model.addAttribute("recipe", recipeService.findRecipeCommand(id));
         return "recipe/imageuploadform";
     }
 
     @PostMapping("/recipe/{id}/image")
-    public String saveImagePost(@PathVariable Long id, @RequestParam("imagefile") MultipartFile imageFile){
+    public String saveImagePost(@PathVariable String id, @RequestParam("imagefile") MultipartFile imageFile){
         log.info("Saving image.");
         this.imageService.saveImageFile(id, imageFile);
         return "redirect:/recipe/" + id;
@@ -48,7 +47,7 @@ public class ImageController {
     @GetMapping("/recipe/{id}/recipeimage")
     public void renderImageFromDB(@PathVariable String id, HttpServletResponse response) throws IOException {
         RecipeCommand recipeCommand = this.recipeService
-                .findRecipeCommand(Long.valueOf(id));
+                .findRecipeCommand(id);
         byte[] byteArray = new byte[recipeCommand.getImage().length];
         int i = 0;
         for (Byte b : recipeCommand.getImage()) byteArray[i++] = b;
