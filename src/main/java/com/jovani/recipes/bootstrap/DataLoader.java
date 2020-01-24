@@ -5,9 +5,13 @@ import com.jovani.recipes.repositories.CategoryRepository;
 import com.jovani.recipes.repositories.IngredientRepository;
 import com.jovani.recipes.repositories.RecipeRepository;
 import com.jovani.recipes.repositories.UnitOfMeasureRepository;
+import com.jovani.recipes.repositories.reactive.CategoryReactiveRepository;
+import com.jovani.recipes.repositories.reactive.RecipeReactiveRepository;
+import com.jovani.recipes.repositories.reactive.UnitOfMeasureReactiveRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -29,6 +33,13 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
     private final RecipeRepository recipeRepository;
     private final UnitOfMeasureRepository unitOfMeasureRepository;
     private final IngredientRepository ingredientRepository;
+
+    @Autowired
+    private UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
+    @Autowired
+    private RecipeReactiveRepository recipeReactiveRepository;
+    @Autowired
+    private CategoryReactiveRepository categoryReactiveRepository;
 
     private void loadCategories(){
         Category cat1 = new Category();
@@ -292,5 +303,8 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         loadCategories();
         loadUom();
         loadRecipes();
+        log.info("Unit of measure counter: {}", this.unitOfMeasureReactiveRepository.count().block().toString());
+        log.info("Recipe counter: {}", this.recipeReactiveRepository.count().block().toString());
+        log.info("Category counter: {}", this.categoryReactiveRepository.count().block().toString());
     }
 }
