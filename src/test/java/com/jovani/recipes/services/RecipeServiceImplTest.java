@@ -4,16 +4,16 @@ import com.jovani.recipes.converters.RecipeCommandToRecipe;
 import com.jovani.recipes.converters.RecipeToRecipeCommand;
 import com.jovani.recipes.domain.Recipe;
 import com.jovani.recipes.exceptions.NotFoundException;
-import com.jovani.recipes.repositories.RecipeRepository;
+import com.jovani.recipes.repositories.reactive.RecipeReactiveRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -24,8 +24,7 @@ class RecipeServiceImplTest {
     private RecipeServiceImpl recipeService;
 
     @Mock
-    private RecipeRepository recipeRepository;
-
+    private RecipeReactiveRepository recipeRepository;
     @Mock
     private RecipeToRecipeCommand recipeToRecipeCommand;
     @Mock
@@ -40,8 +39,8 @@ class RecipeServiceImplTest {
     @Test
     void getRecipesTest() {
         Recipe recipe = new Recipe();
-        when(recipeRepository.findAll()).thenReturn(Arrays.asList(recipe));
-        List<Recipe> recipes = recipeService.getRecipes();
+        when(recipeRepository.findAll()).thenReturn(Flux.just(recipe));
+        List<Recipe> recipes = recipeService.getRecipes().collectList().block();
         assertEquals(1, recipes.size());
         // verify if a method is called a determined number of times
         verify(recipeRepository, times(1)).findAll();
@@ -51,11 +50,10 @@ class RecipeServiceImplTest {
     void getRecipeByIdTest(){
         Recipe recipe = new Recipe();
         recipe.setId("1L");
-        Optional<Recipe> optRecipe = Optional.of(recipe);
 
-        when(this.recipeRepository.findById("1L")).thenReturn(optRecipe);
+        when(this.recipeRepository.findById("1L")).thenReturn(Mono.just(recipe));
 
-        Recipe recipeReturned = this.recipeService.findById("1L");
+        Recipe recipeReturned = this.recipeService.findById("1L").block();
         assertNotNull(recipeReturned); // test if not null
         verify(recipeRepository).findById(anyString()); // execution count must be 1
         verify(recipeRepository, never()).findAll(); // findAll method must not be executed
@@ -65,9 +63,8 @@ class RecipeServiceImplTest {
     @Test
     void getRecipeByIdTestNotFound(){
         Assertions.assertThrows(NotFoundException.class, () -> {
-            Optional<Recipe> optionalRecipe = Optional.empty();
-            when(recipeRepository.findById(any())).thenReturn(optionalRecipe);
-            Recipe recipe = recipeService.findById("1L");
+            when(recipeRepository.findById(anyString())).thenReturn(Mono.empty());
+            Recipe recipe = recipeService.findById("1L").block();
         });
     }
 

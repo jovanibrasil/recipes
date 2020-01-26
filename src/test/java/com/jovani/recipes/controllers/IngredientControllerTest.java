@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import reactor.core.publisher.Mono;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -41,7 +42,8 @@ class IngredientControllerTest {
     public void testListIngredients() throws Exception {
 
         RecipeCommand recipeCommand = new RecipeCommand();
-        when(recipeService.findIngredientCommandById(anyString())).thenReturn(recipeCommand);
+        when(recipeService.findIngredientCommandById(anyString()))
+                .thenReturn(Mono.just(recipeCommand));
 
         mockMvc.perform(get("/recipe/1/ingredients"))
                 .andExpect(status().isOk())
@@ -55,7 +57,7 @@ class IngredientControllerTest {
     public void testViewIngredient() throws Exception {
 
         IngredientCommand ingredientCommand = new IngredientCommand();
-        when(ingredientService.findById(anyString())).thenReturn(ingredientCommand);
+        when(ingredientService.findById(anyString())).thenReturn(Mono.just(ingredientCommand));
 
         mockMvc.perform(get("/recipe/1/ingredient/1/show"))
                 .andExpect(status().isOk())

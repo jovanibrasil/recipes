@@ -26,14 +26,13 @@ public class RecipeController {
     @GetMapping("/recipe/{id}")
     public String showRecipeById(@PathVariable String id, Model model){
         log.debug("Getting show recipe page");
-        model.addAttribute("recipe", this.recipeService.findById(id));
+        model.addAttribute("recipe", this.recipeService.findById(id).block());
         return "recipe/show";
     }
 
     @GetMapping("/recipe/{id}/update")
     public String editRecipeById(@PathVariable String id, Model model){
-        RecipeCommand recipeCommand = this.recipeService.findRecipeCommand(id);
-        model.addAttribute("recipe", recipeCommand);
+        model.addAttribute("recipe", this.recipeService.findRecipeCommand(id).block());
         return "recipe/recipeform";
     }
 
@@ -56,7 +55,7 @@ public class RecipeController {
         if(bindingResult.hasErrors()) return "recipe/recipeform";
 
         RecipeCommand savedRecipeCommand = this.recipeService
-                .saveRecipeCommand(recipeCommand);
+                .saveRecipeCommand(recipeCommand).block();
         return "redirect:/recipe/" + savedRecipeCommand.getId();
     }
 

@@ -1,11 +1,8 @@
 package com.jovani.recipes.bootstrap;
 
 import com.jovani.recipes.domain.*;
-import com.jovani.recipes.repositories.CategoryRepository;
-import com.jovani.recipes.repositories.IngredientRepository;
-import com.jovani.recipes.repositories.RecipeRepository;
-import com.jovani.recipes.repositories.UnitOfMeasureRepository;
 import com.jovani.recipes.repositories.reactive.CategoryReactiveRepository;
+import com.jovani.recipes.repositories.reactive.IngredientReactiveRepository;
 import com.jovani.recipes.repositories.reactive.RecipeReactiveRepository;
 import com.jovani.recipes.repositories.reactive.UnitOfMeasureReactiveRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,94 +26,87 @@ import java.util.Optional;
 @Component
 public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
-    private final CategoryRepository categoryRepository;
-    private final RecipeRepository recipeRepository;
-    private final UnitOfMeasureRepository unitOfMeasureRepository;
-    private final IngredientRepository ingredientRepository;
-
-    @Autowired
-    private UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
-    @Autowired
-    private RecipeReactiveRepository recipeReactiveRepository;
-    @Autowired
-    private CategoryReactiveRepository categoryReactiveRepository;
+    private final CategoryReactiveRepository categoryRepository;
+    private final RecipeReactiveRepository recipeRepository;
+    private final UnitOfMeasureReactiveRepository unitOfMeasureRepository;
+    private final IngredientReactiveRepository ingredientRepository;
 
     private void loadCategories(){
         Category cat1 = new Category();
         cat1.setDescription("American");
-        categoryRepository.save(cat1);
+        categoryRepository.save(cat1).block();
 
         Category cat2 = new Category();
         cat2.setDescription("Italian");
-        categoryRepository.save(cat2);
+        categoryRepository.save(cat2).block();
 
         Category cat3 = new Category();
         cat3.setDescription("Mexican");
-        categoryRepository.save(cat3);
+        categoryRepository.save(cat3).block();
 
         Category cat4 = new Category();
         cat4.setDescription("Fast Food");
-        categoryRepository.save(cat4);
+        categoryRepository.save(cat4).block();
     }
 
     private void loadUom(){
         UnitOfMeasure uom1 = new UnitOfMeasure();
         uom1.setDescription("Teaspoon");
-        unitOfMeasureRepository.save(uom1);
+        unitOfMeasureRepository.save(uom1).block();
 
         UnitOfMeasure uom2 = new UnitOfMeasure();
         uom2.setDescription("Tablespoon");
-        unitOfMeasureRepository.save(uom2);
+        unitOfMeasureRepository.save(uom2).block();
 
         UnitOfMeasure uom3 = new UnitOfMeasure();
         uom3.setDescription("Cup");
-        unitOfMeasureRepository.save(uom3);
+        unitOfMeasureRepository.save(uom3).block();
 
         UnitOfMeasure uom4 = new UnitOfMeasure();
         uom4.setDescription("Pinch");
-        unitOfMeasureRepository.save(uom4);
+        unitOfMeasureRepository.save(uom4).block();
 
         UnitOfMeasure uom5 = new UnitOfMeasure();
         uom5.setDescription("Ounce");
-        unitOfMeasureRepository.save(uom5);
+        unitOfMeasureRepository.save(uom5).block();
 
         UnitOfMeasure uom6 = new UnitOfMeasure();
         uom6.setDescription("Each");
-        unitOfMeasureRepository.save(uom6);
+        unitOfMeasureRepository.save(uom6).block();
 
         UnitOfMeasure uom7 = new UnitOfMeasure();
         uom7.setDescription("Pint");
-        unitOfMeasureRepository.save(uom7);
+        unitOfMeasureRepository.save(uom7).block();
 
         UnitOfMeasure uom8 = new UnitOfMeasure();
         uom8.setDescription("Dash");
-        unitOfMeasureRepository.save(uom8);
+        unitOfMeasureRepository.save(uom8).block();
     }
 
     private void loadRecipes() throws IOException {
 
         //get UOMs
-        Optional<UnitOfMeasure> eachUomOptional = unitOfMeasureRepository.findByDescription("Each");
+        Optional<UnitOfMeasure> eachUomOptional = unitOfMeasureRepository.findByDescription("Each").blockOptional();
 
         if(!eachUomOptional.isPresent()){ throw new RuntimeException("Expected UOM Not Found"); }
 
-        Optional<UnitOfMeasure> tableSpoonUomOptional = unitOfMeasureRepository.findByDescription("Tablespoon");
+        Optional<UnitOfMeasure> tableSpoonUomOptional = unitOfMeasureRepository.findByDescription("Tablespoon").blockOptional();
 
         if(!tableSpoonUomOptional.isPresent()){ throw new RuntimeException("Expected UOM Not Found"); }
 
-        Optional<UnitOfMeasure> teaSpoonUomOptional = unitOfMeasureRepository.findByDescription("Teaspoon");
+        Optional<UnitOfMeasure> teaSpoonUomOptional = unitOfMeasureRepository.findByDescription("Teaspoon").blockOptional();
 
         if(!teaSpoonUomOptional.isPresent()){ throw new RuntimeException("Expected UOM Not Found"); }
 
-        Optional<UnitOfMeasure> dashUomOptional = unitOfMeasureRepository.findByDescription("Dash");
+        Optional<UnitOfMeasure> dashUomOptional = unitOfMeasureRepository.findByDescription("Dash").blockOptional();
 
         if(!dashUomOptional.isPresent()){ throw new RuntimeException("Expected UOM Not Found"); }
 
-        Optional<UnitOfMeasure> pintUomOptional = unitOfMeasureRepository.findByDescription("Pint");
+        Optional<UnitOfMeasure> pintUomOptional = unitOfMeasureRepository.findByDescription("Pint").blockOptional();
 
         if(!pintUomOptional.isPresent()){ throw new RuntimeException("Expected UOM Not Found"); }
 
-        Optional<UnitOfMeasure> cupsUomOptional = unitOfMeasureRepository.findByDescription("Cup");
+        Optional<UnitOfMeasure> cupsUomOptional = unitOfMeasureRepository.findByDescription("Cup").blockOptional();
 
         if(!cupsUomOptional.isPresent()){ throw new RuntimeException("Expected UOM Not Found"); }
 
@@ -129,11 +119,11 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         UnitOfMeasure cupsUom = cupsUomOptional.get();
 
         //get Categories
-        Optional<Category> americanCategoryOptional = categoryRepository.findByDescription("American");
+        Optional<Category> americanCategoryOptional = categoryRepository.findByDescription("American").blockOptional();
 
         if(!americanCategoryOptional.isPresent()){ throw new RuntimeException("Expected Category Not Found"); }
 
-        Optional<Category> mexicanCategoryOptional = categoryRepository.findByDescription("Mexican");
+        Optional<Category> mexicanCategoryOptional = categoryRepository.findByDescription("Mexican").blockOptional();
 
         if(!mexicanCategoryOptional.isPresent()){ throw new RuntimeException("Expected Category Not Found"); }
 
@@ -180,14 +170,14 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         Ingredient tomato = new Ingredient("ripe tomato, seeds and pulp removed, chopped", new BigDecimal(".5"), eachUom, guacRecipe.getId());
 
         List<Ingredient> guacIngredients = Arrays.asList(
-            ingredientRepository.save(ripeAvocados),
-            ingredientRepository.save(kosherSalt),
-            ingredientRepository.save(limeLemonJuice),
-            ingredientRepository.save(redOnion),
-            ingredientRepository.save(serranoChiles),
-            ingredientRepository.save(cilantro),
-            ingredientRepository.save(pepper),
-            ingredientRepository.save(tomato)
+            ingredientRepository.save(ripeAvocados).block(),
+            ingredientRepository.save(kosherSalt).block(),
+            ingredientRepository.save(limeLemonJuice).block(),
+            ingredientRepository.save(redOnion).block(),
+            ingredientRepository.save(serranoChiles).block(),
+            ingredientRepository.save(cilantro).block(),
+            ingredientRepository.save(pepper).block(),
+            ingredientRepository.save(tomato).block()
         );
         guacRecipe.setIngredients(guacIngredients);
 
@@ -197,11 +187,11 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         guacRecipe.setSource("Simply Recipes");
         guacRecipe.setServings(4);
 
-        this.recipeRepository.save(guacRecipe);
+        this.recipeRepository.save(guacRecipe).block();
 
         //Yummy Tacos
         Recipe tacosRecipe = new Recipe();
-        this.recipeRepository.save(tacosRecipe);
+        this.recipeRepository.save(tacosRecipe).block();
         tacosRecipe.setDescription("Spicy Grilled Chicken Taco");
         tacosRecipe.setCookTime(9);
         tacosRecipe.setPrepTime(20);
@@ -253,25 +243,25 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         Ingredient lime = new Ingredient("lime, cut into wedges", new BigDecimal(4), eachUom, tacosRecipe.getId());
 
         List<Ingredient> tacoIngredients = Arrays.asList(
-            ingredientRepository.save(anchoChili),
-            ingredientRepository.save(oregano),
-            ingredientRepository.save(cumin),
-            ingredientRepository.save(sugar),
-            ingredientRepository.save(salt),
-            ingredientRepository.save(garlic),
-            ingredientRepository.save(orange),
-            ingredientRepository.save(juice),
-            ingredientRepository.save(oil),
-            ingredientRepository.save(chicken),
-            ingredientRepository.save(corn),
-            ingredientRepository.save(arugula),
-            ingredientRepository.save(avocados),
-            ingredientRepository.save(radishes),
-            ingredientRepository.save(tomatos),
-            ingredientRepository.save(onion),
-            ingredientRepository.save(choppedCilantro),
-            ingredientRepository.save(milk),
-            ingredientRepository.save(lime)
+            ingredientRepository.save(anchoChili).block(),
+            ingredientRepository.save(oregano).block(),
+            ingredientRepository.save(cumin).block(),
+            ingredientRepository.save(sugar).block(),
+            ingredientRepository.save(salt).block(),
+            ingredientRepository.save(garlic).block(),
+            ingredientRepository.save(orange).block(),
+            ingredientRepository.save(juice).block(),
+            ingredientRepository.save(oil).block(),
+            ingredientRepository.save(chicken).block(),
+            ingredientRepository.save(corn).block(),
+            ingredientRepository.save(arugula).block(),
+            ingredientRepository.save(avocados).block(),
+            ingredientRepository.save(radishes).block(),
+            ingredientRepository.save(tomatos).block(),
+            ingredientRepository.save(onion).block(),
+            ingredientRepository.save(choppedCilantro).block(),
+            ingredientRepository.save(milk).block(),
+            ingredientRepository.save(lime).block()
         );
 
         tacosRecipe.setIngredients(tacoIngredients);
@@ -280,7 +270,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         tacosRecipe.getCategories().add(mexicanCategory);
         tacosRecipe.setServings(5);
         tacosRecipe.setSource("Simply Recipes");
-        this.recipeRepository.save(tacosRecipe);
+        this.recipeRepository.save(tacosRecipe).block();
 
     }
 
@@ -303,8 +293,5 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         loadCategories();
         loadUom();
         loadRecipes();
-        log.info("Unit of measure counter: {}", this.unitOfMeasureReactiveRepository.count().block().toString());
-        log.info("Recipe counter: {}", this.recipeReactiveRepository.count().block().toString());
-        log.info("Category counter: {}", this.categoryReactiveRepository.count().block().toString());
     }
 }

@@ -1,9 +1,8 @@
 package com.jovani.recipes.services;
 
 import com.jovani.recipes.commands.UnitOfMeasureCommand;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
 
 public interface UnitOfMeasureService {
-    public List<UnitOfMeasureCommand> listAllUoms();
+    Flux<UnitOfMeasureCommand> listAllUoms();
 }

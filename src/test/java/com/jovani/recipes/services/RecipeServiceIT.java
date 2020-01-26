@@ -5,16 +5,21 @@ import com.jovani.recipes.commands.RecipeCommand;
 import com.jovani.recipes.converters.RecipeCommandToRecipe;
 import com.jovani.recipes.converters.RecipeToRecipeCommand;
 import com.jovani.recipes.domain.Recipe;
-import com.jovani.recipes.repositories.CategoryRepository;
-import com.jovani.recipes.repositories.IngredientRepository;
-import com.jovani.recipes.repositories.RecipeRepository;
-import com.jovani.recipes.repositories.UnitOfMeasureRepository;
+import com.jovani.recipes.repositories.reactive.CategoryReactiveRepository;
+import com.jovani.recipes.repositories.reactive.IngredientReactiveRepository;
+import com.jovani.recipes.repositories.reactive.RecipeReactiveRepository;
+import com.jovani.recipes.repositories.reactive.UnitOfMeasureReactiveRepository;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import reactor.core.publisher.Flux;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,20 +32,18 @@ public class RecipeServiceIT {
     @Autowired
     private RecipeService recipeService;
     @Autowired
-    private RecipeRepository recipeRepository;
+    private RecipeReactiveRepository recipeRepository;
     @Autowired
     private RecipeToRecipeCommand recipeToRecipeCommand;
-    @Autowired
-    private RecipeCommandToRecipe recipeCommandToRecipe;
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private CategoryReactiveRepository categoryRepository;
     @Autowired
-    private UnitOfMeasureRepository unitOfMeasureRepository;
+    private UnitOfMeasureReactiveRepository unitOfMeasureRepository;
     @Autowired
-    private IngredientRepository ingredientRepository;
+    private IngredientReactiveRepository ingredientRepository;
 
-    @Before
+    @BeforeAll
     public void setUp() throws Exception {
         this.categoryRepository.deleteAll();
         this.recipeRepository.deleteAll();
@@ -52,12 +55,14 @@ public class RecipeServiceIT {
 
     @Test
     public void testSaveOfDescription(){
-        Iterable<Recipe> recipes = this.recipeRepository.findAll();
+        Flux<Recipe> fluxRecipes = this.recipeRepository.findAll();
+        List<Recipe> recipes = fluxRecipes.collectList().block();
         Recipe testRecipe = recipes.iterator().next();
         RecipeCommand recipeCommand = this.recipeToRecipeCommand.convert(testRecipe);
 
         recipeCommand.setDescription(NEW_DESCRIPTION);
-        RecipeCommand savedRecipeCommand = this.recipeService.saveRecipeCommand(recipeCommand);
+        RecipeCommand savedRecipeCommand = this.recipeService
+                .saveRecipeCommand(recipeCommand).block();
 
         assertEquals(NEW_DESCRIPTION, recipeCommand.getDescription());
         assertEquals(testRecipe.getId(), savedRecipeCommand.getId());

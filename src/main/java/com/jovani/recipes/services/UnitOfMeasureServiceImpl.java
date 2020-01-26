@@ -2,29 +2,21 @@ package com.jovani.recipes.services;
 
 import com.jovani.recipes.commands.UnitOfMeasureCommand;
 import com.jovani.recipes.converters.UnitOfMeasureToUnitOfMeasureCommand;
-import com.jovani.recipes.repositories.UnitOfMeasureRepository;
+import com.jovani.recipes.repositories.reactive.UnitOfMeasureReactiveRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
+@RequiredArgsConstructor
 @Service
 public class UnitOfMeasureServiceImpl implements UnitOfMeasureService {
 
-    private final UnitOfMeasureRepository unitOfMeasureRepository;
+    private final UnitOfMeasureReactiveRepository unitOfMeasureRepository;
     private final UnitOfMeasureToUnitOfMeasureCommand unitOfMeasureToUnitOfMeasureCommand;
 
-    public UnitOfMeasureServiceImpl(UnitOfMeasureRepository unitOfMeasureRepository, UnitOfMeasureToUnitOfMeasureCommand unitOfMeasureToUnitOfMeasureCommand) {
-        this.unitOfMeasureRepository = unitOfMeasureRepository;
-        this.unitOfMeasureToUnitOfMeasureCommand = unitOfMeasureToUnitOfMeasureCommand;
-    }
-
     @Override
-    public List<UnitOfMeasureCommand> listAllUoms() {
-        return StreamSupport
-                .stream(this.unitOfMeasureRepository.findAll().spliterator(), false)
-                .map(unitOfMeasureToUnitOfMeasureCommand::convert)
-                .collect(Collectors.toList());
+    public Flux<UnitOfMeasureCommand> listAllUoms() {
+        return this.unitOfMeasureRepository
+            .findAll().map(unitOfMeasureToUnitOfMeasureCommand::convert);
     }
 }

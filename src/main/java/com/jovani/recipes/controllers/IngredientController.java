@@ -32,7 +32,7 @@ public class IngredientController {
     public String listIngredients(@PathVariable String id, Model model){
         log.debug("Getting ingredient list for recipe id: " + id);
         model.addAttribute("recipe",
-                this.recipeService.findIngredientCommandById(id));
+                this.recipeService.findIngredientCommandById(id).block());
         return "recipe/ingredients/list";
     }
 
@@ -41,7 +41,7 @@ public class IngredientController {
                                  @PathVariable String ingredientId, Model model){
         log.debug("Getting ingredient {}", ingredientId);
         model.addAttribute("ingredient",
-                this.ingredientService.findById(ingredientId));
+                this.ingredientService.findById(ingredientId).block());
         return "recipe/ingredients/viewingredient";
     }
 
@@ -49,7 +49,7 @@ public class IngredientController {
     public String newIngredient(@PathVariable String recipeId, Model model){
         log.debug("Creating new ingredient for recipe wit id={}", recipeId);
 
-        RecipeCommand recipeCommand = this.recipeService.findRecipeCommand(recipeId);
+        RecipeCommand recipeCommand = this.recipeService.findRecipeCommand(recipeId).block();
 
         IngredientCommand ingredientCommand = new IngredientCommand();
         ingredientCommand.setRecipeId(recipeId);
@@ -57,7 +57,7 @@ public class IngredientController {
 
         // init unit of measure
         ingredientCommand.setUom(new UnitOfMeasureCommand());
-        model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
+        model.addAttribute("uomList", unitOfMeasureService.listAllUoms().collectList().block());
 
         return "recipe/ingredients/ingredientform";
     }
@@ -67,8 +67,8 @@ public class IngredientController {
                                    @PathVariable String ingredientId, Model model){
         log.debug("Updating ingredient {}", ingredientId);
         model.addAttribute("ingredient",
-                this.ingredientService.findById(ingredientId));
-        model.addAttribute("uomList", this.unitOfMeasureService.listAllUoms());
+                this.ingredientService.findById(ingredientId).block());
+        model.addAttribute("uomList", this.unitOfMeasureService.listAllUoms().collectList().block());
         return "recipe/ingredients/ingredientform";
     }
 
@@ -85,7 +85,7 @@ public class IngredientController {
         log.debug("Saving or updating ingredient for recipe id={}", ingredientCommand.getRecipeId());
 
         IngredientCommand savedIngredientCommand = this.ingredientService
-                            .saveIngredientCommand(ingredientCommand);
+                            .saveIngredientCommand(ingredientCommand).block();
 
         log.debug("saved recipe id:" + savedIngredientCommand.getRecipeId());
         log.debug("saved ingredient id:" + savedIngredientCommand.getId());

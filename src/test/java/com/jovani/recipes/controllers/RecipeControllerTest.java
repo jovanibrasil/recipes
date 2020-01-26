@@ -11,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import reactor.core.publisher.Mono;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -43,7 +44,7 @@ class RecipeControllerTest {
         Recipe recipe = new Recipe();
         recipe.setId("1L");
 
-        when(this.recipeService.findById("1L")).thenReturn(recipe);
+        when(this.recipeService.findById("1L")).thenReturn(Mono.just(recipe));
 
         this.mockMvc.perform(get("/recipe/1L"))
                 .andExpect(status().isOk())
@@ -73,7 +74,7 @@ class RecipeControllerTest {
         RecipeCommand command = new RecipeCommand();
         command.setId("2L");
 
-        when(recipeService.saveRecipeCommand(any())).thenReturn(command);
+        when(recipeService.saveRecipeCommand(any())).thenReturn(Mono.just(command));
 
         this.mockMvc.perform(post("/recipe")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -92,7 +93,7 @@ class RecipeControllerTest {
         RecipeCommand command = new RecipeCommand();
         command.setId("2L");
 
-        when(recipeService.saveRecipeCommand(any())).thenReturn(command);
+        when(recipeService.saveRecipeCommand(any())).thenReturn(Mono.just(command));
 
         this.mockMvc.perform(post("/recipe")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -108,7 +109,7 @@ class RecipeControllerTest {
         RecipeCommand command = new RecipeCommand();
         command.setId("2L");
 
-        when(recipeService.findRecipeCommand(any())).thenReturn(command);
+        when(recipeService.findRecipeCommand(any())).thenReturn(Mono.just(command));
 
         this.mockMvc.perform(get("/recipe/2/update"))
                 .andExpect(status().isOk())

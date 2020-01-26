@@ -1,9 +1,10 @@
 package com.jovani.recipes.services;
 
 import com.jovani.recipes.commands.IngredientCommand;
+import reactor.core.publisher.Mono;
 
 public interface IngredientService {
-    IngredientCommand findById(String ingredientId);
-    void deleteById(String ingredientId);
-    IngredientCommand saveIngredientCommand(IngredientCommand ingredientCommand);
+    Mono<IngredientCommand> findById(String ingredientId);
+    Mono<Void> deleteById(String ingredientId);
+    Mono<IngredientCommand> saveIngredientCommand(IngredientCommand ingredientCommand);
 }

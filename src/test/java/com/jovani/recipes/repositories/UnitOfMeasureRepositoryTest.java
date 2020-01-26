@@ -2,6 +2,10 @@ package com.jovani.recipes.repositories;
 
 import com.jovani.recipes.bootstrap.DataLoader;
 import com.jovani.recipes.domain.UnitOfMeasure;
+import com.jovani.recipes.repositories.reactive.CategoryReactiveRepository;
+import com.jovani.recipes.repositories.reactive.IngredientReactiveRepository;
+import com.jovani.recipes.repositories.reactive.RecipeReactiveRepository;
+import com.jovani.recipes.repositories.reactive.UnitOfMeasureReactiveRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -18,13 +22,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class UnitOfMeasureRepositoryTest {
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private CategoryReactiveRepository categoryRepository;
     @Autowired
-    private RecipeRepository recipeRepository;
+    private RecipeReactiveRepository recipeRepository;
     @Autowired
-    private UnitOfMeasureRepository unitOfMeasureRepository;
+    private UnitOfMeasureReactiveRepository unitOfMeasureRepository;
     @Autowired
-    private IngredientRepository ingredientRepository;
+    private IngredientReactiveRepository ingredientRepository;
 
     @BeforeEach
     void setUp() {
@@ -38,7 +42,8 @@ class UnitOfMeasureRepositoryTest {
 
     @Test
     public void findByDescription(){
-        Optional<UnitOfMeasure> uomOptional = this.unitOfMeasureRepository.findByDescription("Teaspoon");
+        Optional<UnitOfMeasure> uomOptional = this.unitOfMeasureRepository
+                .findByDescription("Teaspoon").blockOptional();
         assertEquals("Teaspoon", uomOptional.get().getDescription());
     }
 
